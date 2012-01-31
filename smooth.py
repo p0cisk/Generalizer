@@ -1,5 +1,6 @@
 from PyQt4.QtGui import *
 from points import *
+from matrix import *
 
 GRASS_EPSILON = 1.0e-15
 
@@ -29,9 +30,8 @@ def boyle(points, look_ahead):
         point_assign(points, p, ppoint)
         point_scalar(ppoint, c1, ppoint)
         point_scalar(last, c2, last)
-        point_add(last, ppoint, npoint)
-        points.x[next] = npoint.x
-        points.y[next] = npoint.y
+        points_add(last, ppoint, npoint)
+        points.repleace_point(next, npoint)
 
         next = next + 1
         i = i + 1
@@ -69,7 +69,7 @@ def sliding_averaging(points, slide, look_ahead):
     point_assign(points, 0, p)
     while i < look_ahead:
         point_assign(points, i, tmp)
-        point_add(p, tmp, p)
+        points_add(p, tmp, p)
         i = i + 1
 
     i = half
@@ -77,18 +77,18 @@ def sliding_averaging(points, slide, look_ahead):
         point_assign(points, i, s)
         point_scalar(s, 1. - slide, s)
         point_scalar(p, sc*slide, tmp)
-        point_add(tmp, s, res[i])
+        points_add(tmp, s, res[i])
         if i+half+1 < n:
             point_assign(points, i-half, tmp)
             point_substract(p, tmp, p)
             point_assign(points, i+half+1, tmp)
-            point_add(p, tmp, p)
+            points_add(p, tmp, p)
         i = i + 1
 
     i = half
     while i+half < n:
-        points.x[i] = res[i].x
-        points.y[i] = res[i].y
+        points.repleace_point(i, res[i])
+
         i = i + 1
 
     return points.n_points
@@ -153,13 +153,12 @@ def distance_weighting(points, slide, look_ahead):
         else:
             point_scalar(s, slide/dists, tmp)
         point_scalar(c, 1.-slide, s)
-        point_add(s, tmp, res[i])
+        points_add(s, tmp, res[i])
         i = i + 1
 
     i = half
     while i+half < n:
-        points.x[i] = res[i].x
-        points.y[i] = res[i].y
+        points.repleace_point(i, res[i])
 
         i = i + 1
 
@@ -176,7 +175,6 @@ def chaiken(points, level, weight):
     p2 = point()
     m1 = point()
     m2 = point()
-    tmp = line_pnts()
     res = line_pnts()
 
     n = points.n_points
@@ -186,45 +184,24 @@ def chaiken(points, level, weight):
     d1 = 1./(1+weight)
     d2 = float(weight)/(1+weight)
 
-    #thresh = thresh * thresh
-
     point_assign(points, 0, p0)
     point_assign(points, n-1, pn)
 
-    tmp.x.extend(points.x)
-    tmp.y.extend(points.y)
-    tmp.n_points = len(tmp.x)
+    tmp = line_pnts(points)
 
     for i in range(level):
         cut_edges(tmp, res, d1, d2)
 
         res.n_points = len(res.x)
-        tmp.x = []
-        tmp.y = []
-        tmp.n_points = 0
+        tmp = line_pnts(res)
 
-        tmp.x.extend(res.x)
-        #print res.x
-        tmp.y.extend(res.y)
-        tmp.n_points = len(tmp.x)
-
-        res.x = []
-        res.y = []
-        res.n_points = 0
+        res = line_pnts()
 
 
-    tmp.x.insert(0, p0.x)
-    tmp.x.append(pn.x)
+    tmp.insert_point(0, p0)
+    tmp.add_point(pn)
 
-    tmp.y.insert(0, p0.y)
-    tmp.y.append(pn.y)
-
-    points.x = []
-    points.y = []
-    points.x.extend(tmp.x)
-    points.y.extend(tmp.y)
-    points.n_points = len(points.x)
-
+    points.repleace_all_pts(tmp)
 
     return points.n_points
 
@@ -248,8 +225,8 @@ def cut_edges(points, res, d1, d2):
         point_calc_new(p1, p2, d1, m1)
         point_calc_new(p1, p2, d2, m2)
 
-        res.x.extend([m1.x, m2.x])
-        res.y.extend([m1.y, m2.y])
+        res.add_point(m1)
+        res.add_point(m2)
 
 
 def hermite(points, threshold, a):
@@ -272,16 +249,12 @@ def hermite(points, threshold, a):
     point_assign(points, 1, p1)
     point_assign(points, 0, p2)
     t1 = getEdgeTangent(p1, p2)
-    points.x.insert(0, t1.x)
-    points.y.insert(0, t1.y)
+    points.insert_point(0, t1)
 
     point_assign(points, -2, p1)
     point_assign(points, -1, p2)
     t2 = getEdgeTangent(p1, p2)
-    points.x.insert(len(points.x), t2.x)
-    points.y.insert(len(points.y), t2.y)
-
-    points.n_points = len(points.x)
+    points.insert_point(points.n_points, t1)
 
     n = points.n_points
 
@@ -302,11 +275,8 @@ def hermite(points, threshold, a):
         #t = 0.
         if dist == 0 or dist<threshold:
             i = i+1
-            res.x.append(p1.x)
-            res.y.append(p1.y)
-
-            res.x.append(p2.x)
-            res.y.append(p2.y)
+            res.add_point(p1)
+            res.add_point(p2)
             continue
         else:
             t = float(threshold)/dist
@@ -315,38 +285,25 @@ def hermite(points, threshold, a):
         t1 = getTangent(points, a, i)
         t2 = getTangent(points, a, i+1)
 
-        #while t < steps:
         while s < 1:
-            #s = float(t)/steps
-            #print s, dist
-
             point_scalar(p1, h1(s), h1p1)
             point_scalar(p2, h2(s), h2p2)
             point_scalar(t1, h3(s), h3t1)
             point_scalar(t2, h4(s), h4t2)
 
-            point_add(h1p1, h2p2, tmp1)
-            point_add(h3t1, h4t2, tmp2)
-            point_add(tmp1, tmp2, tmp)
+            points_add(h1p1, h2p2, tmp1)
+            points_add(h3t1, h4t2, tmp2)
+            points_add(tmp1, tmp2, tmp)
 
-            res.x.append(tmp.x)
-            res.y.append(tmp.y)
+            res.add_point(tmp)
 
-            #t = float(t+1)
             s = s+t
 
         i = i + 1
 
-    res.x.append(p2.x)
-    res.y.append(p2.y)
+    res.add_point(p2)
 
-    res.n_points = len(res.x)
-
-    points.x = []
-    points.y = []
-    points.x.extend(res.x)
-    points.y.extend(res.y)
-    points.n_points = len(points.x)
+    points.repleace_all_pts(res)
 
     return points.n_points
 
@@ -371,6 +328,82 @@ def getTangent(points, a, i):
 
     return p
 
+def snakes(points, alpha, beta):
+    n = points.n_points
+
+    if n < 3: return n
+
+    plus = 4
+
+    g = MATRIX(n+2*plus, n+2*plus)
+    xcoord = MATRIX(n+2*plus, 1)
+    ycoord = MATRIX(n+2*plus, 1)
+    xout = MATRIX(n+2*plus, 1)
+    yout = MATRIX(n+2*plus, 1)
+
+    x0 = points.x[0]
+    y0 = points.y[0]
+
+    i = 0
+    while i<n:
+        xcoord.a[i+plus][0] = points.x[i]-x0
+        ycoord.a[i+plus][0] = points.y[i]-y0
+        i = i+1
+
+    i = 0
+    while i<plus:
+        xcoord.a[i][0] = 0
+        ycoord.a[i][0] = 0
+        i = i+1
+
+    i = n+plus
+    while i<n+2*plus:
+        xcoord.a[i][0] = points.x[n-1]-x0
+        ycoord.a[i][0] = points.y[n-1]-y0
+        i = i+1
+
+    a = 2. * alpha + 6. * beta
+    b = -alpha - 4. * beta
+    c = beta
+
+    val = [c, b, a, b, c]
+
+    i = 0
+    while i < n+2*plus:
+        j = 0
+        while j < n+2*plus:
+            index = j-i+2
+            if index >= 0 and index <=4:
+                g.a[i][j] = val[index]
+            else:
+                g.a[i][j] = 0
+            j = j +1
+
+        i = i+1
+
+    i = 0
+    while i < g.rows:
+        g.a[i][i]= g.a[i][i] + 1.
+        i = i+1
+
+    print 2
+    ginv = matrix_inverse(g)
+    print 3
+
+    xout = matrix_mult(ginv, xcoord)
+    yout = matrix_mult(ginv, ycoord)
+
+    print 4
+
+    i = 1
+    while i < n-1:
+        points.x[i] = xout.a[i+plus][0] + x0
+        points.y[i] = yout.a[i+plus][0] + y0
+
+        i = i+1
+
+    points.n_points = len(points.x)
+    return points.n_points
 
 """
 l = [[0,0], [1,1], [1,2], [2,3], [3,3], [4,2], [5,3], [4,5], [4,7], [6,9], [9,10]]

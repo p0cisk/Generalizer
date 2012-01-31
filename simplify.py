@@ -1,3 +1,4 @@
+from PyQt4.QtGui import *
 from points import *
 import math
 
@@ -19,8 +20,7 @@ def vertex_reduction(points, eps):
     i = 0
     dst = 0
 
-    res.x.append(points.x[0])
-    res.y.append(points.y[0])
+    res.add_point_xy(points.x[0], points.y[0])
 
     while i < n-1:
 
@@ -29,48 +29,30 @@ def vertex_reduction(points, eps):
         point_assign(points, j, p2)
 
         dst = point_dist(p1, p2)
-        #print dst
 
         while dst <= eps:
             j = j + 1
             if j > n-1: break
             point_assign(points, j, p2)
             dst = point_dist(p1, p2)
-        #point_assign(points, j+1, p2)
-        res.x.append(p2.x)
-        res.y.append(p2.y)
+        res.add_point(p2)
+
         i = j
 
-    #res.x.append(points.x[n-1])
-    #res.y.append(points.y[n-1])
-    res.n_points = len(res.x)
 
-    points.x = []
-    points.y = []
-    points.x.extend(res.x)
-    points.y.extend(res.y)
-    points.n_points = len(points.x)
+    points.repleace_all_pts(res)
 
     return points.n_points
 
 
-"""
 
->>> line = [(0,0),(1,0),(2,0),(2,1),(2,2),(1,2),(0,2),(0,1),(0,0)]
->>> douglas_pecker(line, 1.0)
-[(0, 0), (2, 0), (2, 2), (0, 2), (0, 0)]
-
->>> line = [(0,0),(0.5,0.5),(1,0),(1.25,-0.25),(1.5,.5)]
->>> douglas_pecker(line, 0.25)
-[(0, 0), (0.5, 0.5), (1.25, -0.25), (1.5, 0.5)]
-
-"""
-
-def douglas_pecker(pts, tolerance):
+def douglas_peucker(pts, tolerance):
     anchor  = 0
     floater = len(pts) - 1
     stack   = []
     keep    = set()
+
+    if len(pts) < 3: return pts
 
     stack.append((anchor, floater))
     while stack:
@@ -126,6 +108,7 @@ def douglas_pecker(pts, tolerance):
     keep.sort()
     return [pts[i] for i in keep]
 
+
 def lang(points, eps, look_ahead):
     i = 0
     j = look_ahead
@@ -138,7 +121,9 @@ def lang(points, eps, look_ahead):
 
     point_assign(points, i, p1)
     point_assign(points, j, p2)
-    point_add_new(points, 0, res)
+    res.add_point_xy(points.x[0], points.y[0])
+    #point_add_new(points, 0, res) #use point_add insted of this function
+
     end = False
     while not end:
         dists = []
@@ -157,7 +142,8 @@ def lang(points, eps, look_ahead):
             j = j - 1
             point_assign(points, j, p2)
         else:
-            point_add_new(points, j, res)
+            res.add_point_xy(points.x[j], points.y[j])
+            #point_add_new(points, j, res) #use point_add insted of this function
             i = j
             if i == n-1:
                 end = True
@@ -166,14 +152,12 @@ def lang(points, eps, look_ahead):
             point_assign(points, i, p1)
             point_assign(points, j, p2)
 
-    points.x = []
-    points.y = []
-    points.x.extend(res.x)
-    points.y.extend(res.y)
-    points.n_points = len(points.x)
+    points.repleace_all_pts(res)
+
+    return points.n_points
 
 
-def jenks(points, threshold): #do sprawdzenia
+def jenks(points, threshold, angle_thresh):
     n = points.n_points
     i = 1
     p = point()
@@ -181,34 +165,109 @@ def jenks(points, threshold): #do sprawdzenia
     p2 = point()
     res = line_pnts()
 
-    point_add_new(points, 0, res)
+    res.add_point_xy(points.x[0], points.y[0])
+    #point_add_new(points, 0, res) #use point_add insted of this function
 
-    while i < n-2:
+    point_assign(points, 0, p1)
+    while i < n-1:
         point_assign(points, i, p)
-        point_assign(points, i-1, p1)
         point_assign(points, i+1, p2)
 
         dist = point_distance(p1, p2, p)
-        angle = point_angle(p1, p, p2)
-        if dist > threshold:
-            point_add_new(points, i, res)
+        #angle = point_angle(p1, p, p2)
+        #print i, angle
+        if dist >= threshold:# and angle >= angle_thresh:
+            i = i + 1
+            res.add_point_xy(points.x[i-1], points.y[i-1])
+            point_assign(points, i-1, p1)
+        else:
+            while dist < threshold:# or angle < angle_thresh:
+                i = i+1
+                if i == n-1: break
+                point_assign(points, i, p)
+                point_assign(points, i+1, p2)
+                dist = point_distance(p1, p2, p)
+                #angle = point_angle(p1, p, p2)
 
-        i = i + 1
+    res.add_point_xy(points.x[n-1], points.y[n-1])
 
-    point_add_new(points, n-1, res)
+    points.repleace_all_pts(res)
 
-    points.x = []
-    points.y = []
-    points.x.extend(res.x)
-    points.y.extend(res.y)
-    points.n_points = len(points.x)
+    return points.n_points
+
+
+def reumann_witkam(points, thresh):
+    x0 = point()
+    x1 = point()
+    x2 = point()
+    sub = point()
+    diff = point()
+    res = line_pnts()
+    same = True
+
+    n = points.n_points
+
+    if n<3: return n
+
+    thresh = thresh**2
+
+    seg1 = 0
+    seg2 = 1
+    count = 1
+
+    point_assign(points, 0, x1)
+    res.add_point(x1)
+    i = 1
+    while same:
+        point_assign(points, i, x2)
+        same = compare_points(x1, x2)
+        i = i+1
+        if i == n: return n
+    point_substract(x2, x1, sub)
+    subd = point_dist2(sub)
+
+    i = 2
+    while i < n:
+        point_assign(points, i, x0)
+        point_substract(x1, x0, diff)
+        diffd = point_dist2(diff)
+        sp = point_dot(diff, sub)
+        if subd == 0: dist = 0
+        else: dist = (diffd * subd - sp*sp) / subd
+
+        if dist > thresh:
+            point_assign(points, i-1, x1)
+            same = True
+            j = i
+            while same:
+                point_assign(points, j, x2)
+                same = compare_points(x2, x1)
+                j = j+1
+            point_substract(x2, x1, sub)
+            subd = point_dist2(sub)
+
+            res.add_point(x0)
+
+            count = count + 1
+
+        i = i+1
+
+    res.add_point_xy(points.x[n-1], points.y[n-1])
+
+
+    points.repleace_all_pts(res)
+
+    return points.n_points
+
+
 
 """
-#l = [[0,0], [1,1], [1,2], [2,3], [3,3], [4,2], [5,3], [4,5], [4,7], [6,9], [9,10]]
-l = [(487532,653736), (487532,653736), (487608,653726), (487646,653736)]
+l = [[0,0], [1,1], [1,2], [2,3], [3,3], [4,2], [5,3], [4,5], [4,7], [6,9], [9,10]]
+#l = [[9,10], [6,9], [4,7], [4,5], [5,3], [4,2], [3,3], [2,3], [1,2], [1,1], [0,0]]
+#l = [(487532,653736), (487532,653736), (487608,653726), (487646,653736)]
 p = Vect_new_line_struct(l)
-lang(p, 50, 8)
+reumann_witkam(p, 1)
 print l
-print 'X;Y'
+print 'X,Y'
 for i in range(len(p.x)):
-    print p.x[i], ';', p.y[i]"""
+    print p.x[i], ',', p.y[i]"""

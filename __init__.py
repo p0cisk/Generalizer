@@ -24,7 +24,7 @@ def name():
 def description():
     return "Lines generalization and smoothing (partially based on v.generalize GRASS module)"
 def version():
-    return "Version 0.2"
+    return "Version 0.3"
 def icon():
     return "icon.png"
 def qgisMinimumVersion():

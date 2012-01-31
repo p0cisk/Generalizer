@@ -1,4 +1,9 @@
-0.2
+0.3 (15.09.2011)
+-new algorithms:
+smoothing: Snakes Algorithm
+simplifying: Jenk's Algorithm, Reumann-Witkam Algorithm
+
+0.2 (11.09.2011)
 -added batch mode
 -choose to save layer(s) on disk or to store in memory
 -new algorithms:

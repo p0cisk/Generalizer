@@ -39,7 +39,10 @@ algorithm  = {'remove':'Remove small objects',
               'chaiken':'Chaiken\'s Algorithm',
               'hermite':'Hermite Spline Interpolation',
               'distance':'McMaster\'s Distance-Weighting Algorithm',
-              'sliding':'McMaster\'s Sliding Averaging Algorithm'
+              'sliding':'McMaster\'s Sliding Averaging Algorithm',
+              'snakes':'Snakes Algorithm',
+              'jenks':'Jenk\'s Algorithm',
+              'RW':'Reumann-Witkam Algorithm'
               }
 
 
@@ -50,6 +53,9 @@ class generalizerDialog(QDialog):
         self.ui = Ui_generalizer()
         self.ui.setupUi(self)
         self.iface = iface
+
+        self.ui.sbJenks_angle.setVisible(False)
+        self.ui.label_8.setVisible(False)
 
         #set signals
         QObject.connect( self.ui.bBrowse, SIGNAL( "clicked()" ), self.outFile )
@@ -163,6 +169,7 @@ class generalizerDialog(QDialog):
             par2 = QDoubleSpinBox()
             par2.setRange(1, 99.99)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Weight:', 3., 1, 99.99)
+            if not msg[1]: return
             par2.setValue(msg[0])
             par2.setToolTip('Weight')
 
@@ -201,6 +208,7 @@ class generalizerDialog(QDialog):
             par2 = QSpinBox()
             par2.setRange(1, 9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Look ahead:', 8, 1, 999)
+            if not msg[1]: return
             par2.setValue(msg[0])
             par2.setToolTip('Look ahead')
 
@@ -208,16 +216,55 @@ class generalizerDialog(QDialog):
         elif algName[0] == algorithm['hermite']:#'Hermite Spline Interpolation':
             par1 = QDoubleSpinBox()
             par1.setRange(0.0001, 9999999.9999)
-            msg = QInputDialog.getDouble(None, 'Generalizer', 'Steps:', 2., 0.0001, 9999999.9999, 4)
+            msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 2., 0.0001, 9999999.9999, 4)
             if not msg[1]: return
             par1.setValue(msg[0])
-            par1.setToolTip('Steps')
+            par1.setToolTip('Threshold')
 
             par2 = QDoubleSpinBox()
             par2.setRange(0, 1)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Thightness:', 0.5, 0, 1, 2)
+            if not msg[1]: return
             par2.setValue(msg[0])
             par2.setToolTip('Thightness')
+
+        elif algName[0] == algorithm['snakes']:#'Snakes algorithm':
+            par1 = QDoubleSpinBox()
+            par1.setRange(0, 9999.99)
+            msg = QInputDialog.getDouble(None, 'Generalizer', 'Alpha:', 1., 0.00, 9999.99, 2)
+            if not msg[1]: return
+            par1.setValue(msg[0])
+            par1.setToolTip('Alpha')
+
+            par2 = QDoubleSpinBox()
+            par2.setRange(0, 9999.99)
+            msg = QInputDialog.getDouble(None, 'Generalizer', 'Beta:', 0.5, 0., 9999.99, 2)
+            if not msg[1]: return
+            par2.setValue(msg[0])
+            par2.setToolTip('Beta')
+
+        elif algName[0] == algorithm['jenks']:#'Snakes algorithm':
+            par1 = QDoubleSpinBox()
+            par1.setRange(0, 9999999.9999)
+            msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.00, 9999999.9999, 4)
+            if not msg[1]: return
+            par1.setValue(msg[0])
+            par1.setToolTip('Threshold')
+
+            """par2 = QDoubleSpinBox()
+            par2.setRange(0, 180)
+            msg = QInputDialog.getDouble(None, 'Generalizer', 'Angle threshold:', 3, 0., 180, 2)
+            if not msg[1]: return
+            par2.setValue(msg[0])
+            par2.setToolTip('Angle threshold') """
+
+        elif algName[0] == algorithm['RW']:#Reumann-Witkam Algorithm
+            par1 = QDoubleSpinBox()
+            par1.setRange(0, 9999999.9999)
+            msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.00, 9999999.9999, 4)
+            if not msg[1]: return
+            par1.setValue(msg[0])
+            par1.setToolTip('Threshold')
 
         #QMessageBox.question(self, 'Generalizer', str(type(par1)))
         itemAlg = QTableWidgetItem(algName[0])
@@ -258,14 +305,15 @@ class generalizerDialog(QDialog):
     def showHelp(self):
         #show information about plugin
         QMessageBox.information(self, 'Generalizer', """Generalizer
-Version 0.2
+Version 0.3
 
 Created by
 Piotr Pociask
 
 This plugin is marked as experimental.
-If you find any bugs, please contact
-with me: opengis84 (at) gmail (dot) com
+If you find any bugs or have suggestions,
+please contact with me:
+opengis84 (at) gmail (dot) com
 
 """)
 
@@ -287,8 +335,8 @@ with me: opengis84 (at) gmail (dot) com
         if index == 0: self.ui.cbAlgorithm.setCurrentIndex(1)
         elif index == 1: self.ui.stackOptions.setCurrentIndex(index-1) #generalization
         elif index == 2: self.ui.cbAlgorithm.setCurrentIndex(3)
-        elif index < 6: self.ui.stackOptions.setCurrentIndex(index-2) #simplify
-        elif index == 6: self.ui.cbAlgorithm.setCurrentIndex(7)
+        elif index < 8: self.ui.stackOptions.setCurrentIndex(index-2) #simplify
+        elif index == 8: self.ui.cbAlgorithm.setCurrentIndex(9)
         else: self.ui.stackOptions.setCurrentIndex(index-3) #smooth
 
 
@@ -308,8 +356,13 @@ with me: opengis84 (at) gmail (dot) com
             arguments['dist_LA'] = self.ui.sbDist_LA.value()
             arguments['chaiken_level'] = self.ui.sbChaiken_level.value()
             arguments['chaiken_weight'] = self.ui.sbChaiken_weight.value()
-            arguments['hermite_steps'] = self.ui.sbHermite_steps.value()
+            arguments['hermite_thresh'] = self.ui.sbHermite_steps.value()
             arguments['hermite_tightness'] = self.ui.sbHermite_tightness.value()
+            arguments['jenks_thresh'] = self.ui.sbJenks_thresh.value()
+            arguments['jenks_angle'] = self.ui.sbJenks_angle.value()
+            arguments['snakes_alpha'] = self.ui.sbSnakes_alpha.value()
+            arguments['snakes_beta'] = self.ui.sbSnakes_beta.value()
+            arguments['rw_thresh'] = self.ui.sbRW_thresh.value()
         else:
             arguments = {}
             arguments['remove_thresh'] = par1
@@ -324,8 +377,13 @@ with me: opengis84 (at) gmail (dot) com
             arguments['dist_LA'] = par2
             arguments['chaiken_level'] = par1
             arguments['chaiken_weight'] = par2
-            arguments['hermite_steps'] = par1
+            arguments['hermite_thresh'] = par1
             arguments['hermite_tightness'] = par2
+            arguments['jenks_thresh'] = par1
+            arguments['jenks_angle'] = par2
+            arguments['snakes_alpha'] = par1
+            arguments['snakes_beta'] = par2
+            arguments['rw_thresh'] = par1
 
         if (arguments['slide_LA']%2 == 0) or (arguments['dist_LA']%2 == 0):
             QMessageBox.critical(None, 'Generalizer', 'Look ehead parameter must be odd number!')
@@ -348,13 +406,45 @@ with me: opengis84 (at) gmail (dot) com
         elif funcName == algorithm['reduction']:#'Vertex Reduction':
             return self.vertex_reduction
         elif funcName == algorithm['DP']:#'Douglas-Peucker Algorithm':
-            return self.douglas_pecker
+            return self.douglas_peucker
         elif funcName == algorithm['remove']:#'Remove small objects':
             return self.remove
         elif funcName == algorithm['lang']:#'Lang Algorithm':
             return self.lang
         elif funcName == algorithm['hermite']:#'Hermite Spline Interpolation':
             return self.hermite
+        elif funcName == algorithm['jenks']:#'Jenk's Algorithm':
+            return self.jenks
+        elif funcName == algorithm['snakes']:#'Snakes':
+            return self.snakes
+        elif funcName == algorithm['RW']:#'Reumann-Witkam Algorithm':
+            return self.reumann_witkam
+
+    def NameFromFunc(self, func, arguments):
+        if func == self.boyle:
+            return '-boyle_LA-' + str(arguments['boyle_LA'])
+        elif func == self.sliding_averaging:
+            return '-slide_slide-' + str(arguments['slide_slide']) + '_LA-' + str(arguments['slide_LA'])
+        elif func == self.distance_weighting:
+            return '-dist_slide-' + str(arguments['dist_slide']) + '_LA-' + str(arguments['dist_LA'])
+        elif func == self.chaiken:
+            return '-chaiken_level-' + str(arguments['chaiken_level']) + '_weight-' + str(arguments['chaiken_weight'])
+        elif func == self.vertex_reduction:
+            return '-reduction_thresh-' + str(arguments['reduction_thresh'])
+        elif func == self.douglas_peucker:
+            return '-DP_thresh-' + str(arguments['dp_thresh'])
+        elif func == self.remove:
+            return '-remove_thresh-' + str(arguments['remove_thresh'])
+        elif func == self.lang:
+            return '-lang_thresh-' + str(arguments['lang_thresh']) + '_LA-' + str(arguments['lang_LA'])
+        elif func == self.hermite:
+            return '-hermite_thresh-' + str(arguments['hermite_thresh']) + '_tight-' + str(arguments['hermite_tightness'])
+        elif func == self.jenks:
+            return '-jenks_thresh-' + str(arguments['jenks_thresh']) + '_angle-' + str(arguments['jenks_angle'])
+        elif func == self.snakes:
+            return '-snakes_alpha-' + str(arguments['snakes_alpha']) + '_beta-' + str(arguments['snakes_beta'])
+        elif func == self.reumann_witkam:
+            return '-RW_thresh-' + str(arguments['rw_thresh'])
 
 
     def LoadLayers(self, fileList):
@@ -385,9 +475,9 @@ with me: opengis84 (at) gmail (dot) com
 
         if oPath == 'memory': #create memory layer
             if iLayer.wkbType() == QGis.WKBLineString:
-                mLayer = QgsVectorLayer('LineString', iLayerName + '_memory', 'memory')
+                mLayer = QgsVectorLayer('LineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
             else:
-                mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')
+                mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
 
             mProvider = mLayer.dataProvider()
             mProvider.addAttributes( [fields[key] for key in fields] )
@@ -474,7 +564,7 @@ with me: opengis84 (at) gmail (dot) com
                 func = self.GetFunction(alg)
 
                 par1 = self.ui.tblBatchAlg.cellWidget(i,1).value()
-                if not func in [self.remove, self.douglas_pecker, self.vertex_reduction, self.boyle]:
+                if not func in [self.remove, self.douglas_peucker, self.vertex_reduction, self.boyle, self.jenks, self.reumann_witkam]:
                     par2 = self.ui.tblBatchAlg.cellWidget(i,2).value()
                 else:
                     par2 = -1
@@ -534,6 +624,7 @@ with me: opengis84 (at) gmail (dot) com
                 QgsMapLayerRegistry.instance().addMapLayer(mLayer)
 
         #self.close()
+        #refresh layer list
         self.layerList = getLayersNames()
         self.ui.cbInput.clear()
         self.ui.lstLayers.clear()
@@ -587,6 +678,7 @@ with me: opengis84 (at) gmail (dot) com
     def chaiken(self,l,  **kwargs):
         #Chaiken's Algorithm
         p = points.Vect_new_line_struct(l)
+        #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(p.n_points) )
         n = smooth.chaiken(p, kwargs['chaiken_level'], kwargs['chaiken_weight'])
 
         return p
@@ -599,9 +691,9 @@ with me: opengis84 (at) gmail (dot) com
 
         return p
 
-    def douglas_pecker(self,l,  **kwargs):
-        #Douglas-Pecker Algorithm
-        tmp = simplify.douglas_pecker(l, kwargs['dp_thresh'])
+    def douglas_peucker(self,l,  **kwargs):
+        #Douglas-peucker Algorithm
+        tmp = simplify.douglas_peucker(l, kwargs['dp_thresh'])
         p = points.Vect_new_line_struct(tmp)
 
         return p
@@ -616,7 +708,29 @@ with me: opengis84 (at) gmail (dot) com
     def hermite(self,l,  **kwargs):
         #Vertex Reduction
         p = points.Vect_new_line_struct(l)
-        n = smooth.hermite(p, kwargs['hermite_steps'], kwargs['hermite_tightness'])
+        n = smooth.hermite(p, kwargs['hermite_thresh'], kwargs['hermite_tightness'])
+
+        return p
+
+    def jenks(self,l,  **kwargs):
+        #Jenk's Algorithm
+        #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(kwargs['jenks_angle']) )
+        p = points.Vect_new_line_struct(l)
+        n = simplify.jenks(p, kwargs['jenks_thresh'], kwargs['jenks_angle'])
+
+        return p
+
+    def snakes(self,l,  **kwargs):
+        #Snakes
+        p = points.Vect_new_line_struct(l)
+        n = smooth.snakes(p, kwargs['snakes_alpha'], kwargs['snakes_beta'])
+
+        return p
+
+    def reumann_witkam(self,l,  **kwargs):
+        #Snakes
+        p = points.Vect_new_line_struct(l)
+        n = simplify.reumann_witkam(p, kwargs['rw_thresh'])
 
         return p
 

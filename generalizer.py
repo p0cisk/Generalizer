@@ -25,7 +25,7 @@ from qgis.core import *
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
-from generalizerdialog import generalizerDialog
+from generalizerdialog import generalizerDialog, getLayersNames
 
 class generalizer:
 
@@ -51,8 +51,12 @@ class generalizer:
 
     # run method that performs all the real work
     def run(self):
+        #check if there are loaded line layers
+        if len(getLayersNames()) == 0:
+            QMessageBox.critical(None, 'Generalizer', 'Load line layer!')
+            return
 
-        # create and show the dialog
+          # create and show the dialog
         dlg = generalizerDialog(self.iface)
         # show the dialog
         dlg.show()

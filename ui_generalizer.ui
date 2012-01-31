@@ -123,7 +123,17 @@
             </item>
             <item>
              <property name="text">
+              <string>Jenk's Algorithm</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Lang Algorithm</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Reumann-Witkam Algorithm</string>
              </property>
             </item>
             <item>
@@ -159,6 +169,11 @@
             <item>
              <property name="text">
               <string>McMaster's Sliding Averaging Algorithm</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Snakes Algorithm</string>
              </property>
             </item>
            </widget>
@@ -225,6 +240,47 @@
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="page_2">
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Threshold:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="sbJenks_thresh">
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+                <property name="maximum">
+                 <double>9999999.999900000169873</double>
+                </property>
+                <property name="value">
+                 <double>0.000100000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Angle threshold:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="sbJenks_angle">
+                <property name="maximum">
+                 <double>180.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>3.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="page_13">
              <layout class="QGridLayout" name="gridLayout_3">
               <item row="0" column="0">
@@ -267,6 +323,30 @@
                 </property>
                 <property name="value">
                  <number>8</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_4">
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>Threshold:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="sbRW_thresh">
+                <property name="decimals">
+                 <number>4</number>
+                </property>
+                <property name="maximum">
+                 <double>9999999.999900000169873</double>
+                </property>
+                <property name="value">
+                 <double>0.000100000000000</double>
                 </property>
                </widget>
               </item>
@@ -479,6 +559,44 @@
                 </property>
                 <property name="value">
                  <number>7</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_3">
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>Alpha:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="sbSnakes_alpha">
+                <property name="maximum">
+                 <double>9999.989999999999782</double>
+                </property>
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Beta:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="sbSnakes_beta">
+                <property name="maximum">
+                 <double>9999.989999999999782</double>
+                </property>
+                <property name="value">
+                 <double>0.500000000000000</double>
                 </property>
                </widget>
               </item>
