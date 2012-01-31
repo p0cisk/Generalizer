@@ -173,11 +173,35 @@ def lang(points, eps, look_ahead):
     points.n_points = len(points.x)
 
 
-def point_distance(p1, p2, p):
-    try:
-        return math.fabs( (p2.x-p1.x)*(p1.y-p.y)-(p1.x-p.x)*(p2.y-p1.y) ) / math.sqrt((p2.x-p1.x)*(p2.x-p1.x) + (p2.y-p1.y)*(p2.y-p1.y))
-    except:
-        return 0
+def jenks(points, threshold): #do sprawdzenia
+    n = points.n_points
+    i = 1
+    p = point()
+    p1 = point()
+    p2 = point()
+    res = line_pnts()
+
+    point_add_new(points, 0, res)
+
+    while i < n-2:
+        point_assign(points, i, p)
+        point_assign(points, i-1, p1)
+        point_assign(points, i+1, p2)
+
+        dist = point_distance(p1, p2, p)
+        angle = point_angle(p1, p, p2)
+        if dist > threshold:
+            point_add_new(points, i, res)
+
+        i = i + 1
+
+    point_add_new(points, n-1, res)
+
+    points.x = []
+    points.y = []
+    points.x.extend(res.x)
+    points.y.extend(res.y)
+    points.n_points = len(points.x)
 
 """
 #l = [[0,0], [1,1], [1,2], [2,3], [3,3], [4,2], [5,3], [4,5], [4,7], [6,9], [9,10]]

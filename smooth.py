@@ -4,30 +4,6 @@ from points import *
 GRASS_EPSILON = 1.0e-15
 
 
-def point_scalar(a, k, res):
-    res.x = a.x * k
-    res.y = a.y * k
-
-
-def point_add(a, b, res):
-    res.x = a.x + b.x
-    res.y = a.y + b.y
-
-
-def points_copy_last(points, pos):
-    n = points.n_points - 1
-
-    points.x[pos] = points.x[n]
-    points.y[pos] = points.y[n]
-
-    points.n_points = pos + 1
-
-
-def point_substract(a, b, res):
-    res.x = a.x - b.x
-    res.y = a.y - b.y
-
-
 def boyle(points, look_ahead):
     ppoint = point()
     npoint = point()
@@ -214,30 +190,12 @@ def chaiken(points, level, weight):
 
     point_assign(points, 0, p0)
     point_assign(points, n-1, pn)
-    #res.x.append(p0.x)
-    #res.y.append(p0.y)
 
     tmp.x.extend(points.x)
     tmp.y.extend(points.y)
     tmp.n_points = len(tmp.x)
 
     for i in range(level):
-        """
-        for j in range(tmp.n_points):
-            if j == n-1: break
-            point_assign(tmp, j, p1)
-            point_assign(tmp, j+1, p2)
-            #print 'y1: ' + str(p1.y)
-            #print 'y2: ' + str(p2.y)
-
-            point_calc_new(p1, p2, d1, m1)
-            point_calc_new(p1, p2, d2, m2)
-
-            #print 'y1:', m1.y
-            #print 'y2:', m2.y
-
-            res.x.extend([m1.x, m2.x])
-            res.y.extend([m1.y, m2.y])"""
         cut_edges(tmp, res, d1, d2)
 
         res.n_points = len(res.x)
@@ -255,10 +213,6 @@ def chaiken(points, level, weight):
         res.n_points = 0
 
 
-
-    #points2.x.append(pn.x)
-    #points2.y.append(pn.y)
-    #points2.n_points = len(points2.x)
     tmp.x.insert(0, p0.x)
     tmp.x.append(pn.x)
 
@@ -298,11 +252,131 @@ def cut_edges(points, res, d1, d2):
         res.y.extend([m1.y, m2.y])
 
 
+def hermite(points, threshold, a):
+    i = 1
+    p1 = point()
+    p2 = point()
+    t1 = point()
+    t2 = point()
+    h1p1 = point()
+    h2p2 = point()
+    h3t1 = point()
+    h4t2 = point()
+    tmp1 = point()
+    tmp2 = point()
+    tmp = point()
+
+    res = line_pnts()
+
+
+    point_assign(points, 1, p1)
+    point_assign(points, 0, p2)
+    t1 = getEdgeTangent(p1, p2)
+    points.x.insert(0, t1.x)
+    points.y.insert(0, t1.y)
+
+    point_assign(points, -2, p1)
+    point_assign(points, -1, p2)
+    t2 = getEdgeTangent(p1, p2)
+    points.x.insert(len(points.x), t2.x)
+    points.y.insert(len(points.y), t2.y)
+
+    points.n_points = len(points.x)
+
+    n = points.n_points
+
+    if n < 3:
+        return n
+
+    h1 = lambda s: (2*(s**3))-(3*(s**2))+1
+    h2 = lambda s: 3*(s**2)-2*(s**3)
+    h3 = lambda s: (s**3)-(2*(s**2))+s
+    h4 = lambda s: (s**3)-(s**2)
+    ht = lambda s: (1+2*s)*(1-s)**2
+
+    while i < n-2:
+        point_assign(points, i, p1)
+        point_assign(points, i+1, p2)
+
+        dist = point_dist(p1, p2)
+        #t = 0.
+        if dist == 0 or dist<threshold:
+            i = i+1
+            res.x.append(p1.x)
+            res.y.append(p1.y)
+
+            res.x.append(p2.x)
+            res.y.append(p2.y)
+            continue
+        else:
+            t = float(threshold)/dist
+        s = 0.
+
+        t1 = getTangent(points, a, i)
+        t2 = getTangent(points, a, i+1)
+
+        #while t < steps:
+        while s < 1:
+            #s = float(t)/steps
+            #print s, dist
+
+            point_scalar(p1, h1(s), h1p1)
+            point_scalar(p2, h2(s), h2p2)
+            point_scalar(t1, h3(s), h3t1)
+            point_scalar(t2, h4(s), h4t2)
+
+            point_add(h1p1, h2p2, tmp1)
+            point_add(h3t1, h4t2, tmp2)
+            point_add(tmp1, tmp2, tmp)
+
+            res.x.append(tmp.x)
+            res.y.append(tmp.y)
+
+            #t = float(t+1)
+            s = s+t
+
+        i = i + 1
+
+    res.x.append(p2.x)
+    res.y.append(p2.y)
+
+    res.n_points = len(res.x)
+
+    points.x = []
+    points.y = []
+    points.x.extend(res.x)
+    points.y.extend(res.y)
+    points.n_points = len(points.x)
+
+    return points.n_points
+
+def getEdgeTangent(p1, p2):
+    p = point()
+
+    p.x = (p2.x-p1.x)+p2.x
+    p.y = (p2.y-p1.y)+p2.y
+
+    return p
+
+def getTangent(points, a, i):
+    p1 = point()
+    p2 = point()
+    p = point()
+
+    point_assign(points, i-1, p1)
+    point_assign(points, i+1, p2)
+
+    point_substract(p2, p1, p)
+    point_scalar(p, a, p)
+
+    return p
+
+
 """
 l = [[0,0], [1,1], [1,2], [2,3], [3,3], [4,2], [5,3], [4,5], [4,7], [6,9], [9,10]]
 p = Vect_new_line_struct(l)
-pi = chaiken(p, 2, 3)
+pi = hermite(p, 1, 0.3)
 print l
 print 'X;Y'
-for i in range(len(pi.x)):
-    print pi.x[i], ';', pi.y[i] """
+for i in range(len(p.x)):
+    print p.x[i], ';', p.y[i]"""

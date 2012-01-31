@@ -1,3 +1,9 @@
+0.2
+-added batch mode
+-choose to save layer(s) on disk or to store in memory
+-new algorithms:
+smoothing: Hermite Spline Interpolation
+
 0.1 (28.08.2011)
 -first release
 -supported algorithms:
