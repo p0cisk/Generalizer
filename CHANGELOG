@@ -1,0 +1,6 @@
+0.1 (28.08.2011)
+-first release
+-supported algorithms:
+generalization: Remove small objects
+simplifying: Douglas-Peucker, Lang, Vertex Reduction
+smoothing: Boyle's Forward-Looking, Chaiken's, McMaster's Distance-Weighting, McMaster's Sliding Averaging
