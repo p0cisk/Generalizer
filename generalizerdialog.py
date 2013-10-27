@@ -123,6 +123,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['sliding']:#'McMaster\'s Sliding Averaging Algorithm':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(2)
             par1.setRange(0, 99.99)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Slide:', 0.5, 0, 99.99)
             if not msg[1]: return
@@ -142,6 +143,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['distance']:#'McMaster\'s Distance-Weighting Algorithm':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(2)
             par1.setRange(0, 99.99)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Slide:', 0.5, 0, 99.99)
             if not msg[1]: return
@@ -159,7 +161,7 @@ class generalizerDialog(QDialog):
                 par2.setToolTip('Look ahead')
 
         elif algName[0] == algorithm['chaiken']: #'Chaiken\'s Algorithm':
-            par1 = QDoubleSpinBox()
+            par1 = QSpinBox()
             par1.setRange(0, 99)
             msg = QInputDialog.getInt(None, 'Generalizer', 'Level:', 1, 0, 99)
             if not msg[1]: return
@@ -167,6 +169,7 @@ class generalizerDialog(QDialog):
             par1.setToolTip('Level')
 
             par2 = QDoubleSpinBox()
+            par2.setDecimals(2)
             par2.setRange(1, 99.99)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Weight:', 3., 1, 99.99)
             if not msg[1]: return
@@ -175,6 +178,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['reduction']:#'Vertex Reduction':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(4)
             par1.setRange(0.0001, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.0001, 9999999.9999, 4)
             if not msg[1]: return
@@ -183,6 +187,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['DP']:#'Douglas-Peucker Algorithm':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(4)
             par1.setRange(0.0001, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.0001, 9999999.9999, 4)
             if not msg[1]: return
@@ -191,6 +196,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['remove']:#'Remove small objects':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(4)
             par1.setRange(0.0001, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.0001, 9999999.9999, 4)
             if not msg[1]: return
@@ -199,6 +205,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['lang']:#'Lang Algorithm':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(2)
             par1.setRange(0.0001, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.0001, 9999999.9999, 4)
             if not msg[1]: return
@@ -207,7 +214,7 @@ class generalizerDialog(QDialog):
 
             par2 = QSpinBox()
             par2.setRange(1, 9999)
-            msg = QInputDialog.getDouble(None, 'Generalizer', 'Look ahead:', 8, 1, 999)
+            msg = QInputDialog.getInt(None, 'Generalizer', 'Look ahead:', 8, 1, 999)
             if not msg[1]: return
             par2.setValue(msg[0])
             par2.setToolTip('Look ahead')
@@ -215,6 +222,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['hermite']:#'Hermite Spline Interpolation':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(4)
             par1.setRange(0.0001, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 2., 0.0001, 9999999.9999, 4)
             if not msg[1]: return
@@ -222,6 +230,7 @@ class generalizerDialog(QDialog):
             par1.setToolTip('Threshold')
 
             par2 = QDoubleSpinBox()
+            par2.setDecimals(2)
             par2.setRange(0, 1)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Thightness:', 0.5, 0, 1, 2)
             if not msg[1]: return
@@ -230,6 +239,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['snakes']:#'Snakes algorithm':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(2)
             par1.setRange(0, 9999.99)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Alpha:', 1., 0.00, 9999.99, 2)
             if not msg[1]: return
@@ -237,6 +247,7 @@ class generalizerDialog(QDialog):
             par1.setToolTip('Alpha')
 
             par2 = QDoubleSpinBox()
+            par2.setDecimals(2)
             par2.setRange(0, 9999.99)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Beta:', 0.5, 0., 9999.99, 2)
             if not msg[1]: return
@@ -245,6 +256,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['jenks']:#'Snakes algorithm':
             par1 = QDoubleSpinBox()
+            par1.setDecimals(4)
             par1.setRange(0, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.00, 9999999.9999, 4)
             if not msg[1]: return
@@ -260,6 +272,7 @@ class generalizerDialog(QDialog):
 
         elif algName[0] == algorithm['RW']:#Reumann-Witkam Algorithm
             par1 = QDoubleSpinBox()
+            par1.setDecimals(4)
             par1.setRange(0, 9999999.9999)
             msg = QInputDialog.getDouble(None, 'Generalizer', 'Threshold:', 0.0001, 0.00, 9999999.9999, 4)
             if not msg[1]: return
