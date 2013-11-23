@@ -58,17 +58,17 @@ class generalizerDialog(QDialog):
         self.ui.label_8.setVisible(False)
 
         #set signals
-        QObject.connect( self.ui.bBrowse, SIGNAL( "clicked()" ), self.outFile )
-        QObject.connect( self.ui.bBrowseDir, SIGNAL( "clicked()" ), self.outDir )
-        QObject.connect( self.ui.bOk, SIGNAL( "clicked()" ), self.generalize )
-        QObject.connect( self.ui.cbAlgorithm, SIGNAL( "currentIndexChanged(int)" ), self.cbChange )
-        QObject.connect( self.ui.bHelp, SIGNAL( "clicked()" ), self.showHelp )
-        QObject.connect( self.ui.cbBatch, SIGNAL( "stateChanged(int)" ), self.BatchOn )
-        QObject.connect( self.ui.bAddAlg, SIGNAL( "clicked()" ), self.AddAlgorithm )
-        QObject.connect( self.ui.bDelAlg, SIGNAL( "clicked()" ), self.DelAlgorithm )
-        QObject.connect( self.ui.bEditAlg, SIGNAL( "clicked()" ), self.EditAlgorithm )
-        QObject.connect( self.ui.cbOutFile, SIGNAL( "stateChanged(int)" ), self.FileEnabled )
-        QObject.connect( self.ui.cbOutDir, SIGNAL( "stateChanged(int)" ), self.DirEnabled )
+        self.ui.bBrowse.clicked.connect( self.outFile )
+        self.ui.bBrowseDir.clicked.connect( self.outDir )
+        self.ui.bOk.clicked.connect( self.generalize )
+        self.ui.cbAlgorithm.currentIndexChanged.connect( self.cbChange )
+        self.ui.bHelp.clicked.connect( self.showHelp )
+        self.ui.cbBatch.stateChanged.connect( self.BatchOn )
+        self.ui.bAddAlg.clicked.connect( self.AddAlgorithm )
+        self.ui.bDelAlg.clicked.connect( self.DelAlgorithm )
+        self.ui.bEditAlg.clicked.connect( self.EditAlgorithm )
+        self.ui.cbOutFile.stateChanged.connect( self.FileEnabled )
+        self.ui.cbOutDir.stateChanged.connect( self.DirEnabled )
 
         #load line layers to lists
         self.layerList = getLayersNames()
@@ -106,7 +106,7 @@ class generalizerDialog(QDialog):
 
         new = index > self.ui.tblBatchAlg.rowCount()-1
 
-        items = QStringList( [self.ui.cbAlgorithm.itemText(i) for i in range(self.ui.cbAlgorithm.count())] )
+        items = [self.ui.cbAlgorithm.itemText(i) for i in range(self.ui.cbAlgorithm.count())]
         algName = QInputDialog.getItem(None, 'Generalizer', 'Choose algorithm:', items, 1, False)
         if not algName[1] or algName[0].left(1) == '-': return
         #QMessageBox.question(self, 'Generalizer', str(alg))
@@ -335,7 +335,7 @@ opengis84 (at) gmail (dot) com
         outFilePath = saveDialog(self)
         if not outFilePath:
             return
-        self.ui.eOutput.setText(QString(outFilePath))
+        self.ui.eOutput.setText(outFilePath)
 
     def outDir(self):
         #select directory to save layer(s) in created batch mode
@@ -465,26 +465,23 @@ opengis84 (at) gmail (dot) com
         msg = QMessageBox.question(self, 'Generalizer', 'New layer(s) created. \n Add to TOC?', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if msg == QMessageBox.Yes:
             for filePath in fileList:
-                if filePath.contains("\\"):
-                    out_name = filePath.right((filePath.length() - filePath.lastIndexOf("\\")) - 1)
+                if "\\" in filePath:
+                    out_name = filePath[(len(filePath) - filePath.rfind("\\")) - 1:]
                 else:
-                    out_name = filePath.right((filePath.length() - filePath.lastIndexOf("/")) - 1)
+                    out_name = filePath[(len(filePath) - filePath.rfind("/")) - 1:]
 
-                if out_name.endsWith(".shp"):
-                    out_name = out_name.left(out_name.length() - 4)
+                if out_name.endswith(".shp"):
+                    out_name = out_name[:len(out_name) - 4]
 
                     self.iface.addVectorLayer(filePath, out_name, "ogr")
 
 
     def doGeneralize(self, iLayerName, iLayer, oPath, func, arguments):
         #do calculations
-        feat = QgsFeature()
         fet = QgsFeature()
 
         iProvider = iLayer.dataProvider()
-        allAttrs = iProvider.attributeIndexes()
         fields = iProvider.fields()
-        iProvider.select(allAttrs)
 
         if oPath == 'memory': #create memory layer
             if iLayer.wkbType() == QGis.WKBLineString:
@@ -493,9 +490,9 @@ opengis84 (at) gmail (dot) com
                 mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
 
             mProvider = mLayer.dataProvider()
-            mProvider.addAttributes( [fields[key] for key in fields] )
+            mProvider.addAttributes( [key for key in fields] )
 
-            while iProvider.nextFeature(feat):
+            for feat in iProvider.getFeatures():
                 geom = feat.geometry()
                 if geom.isMultipart():
                     lm = geom.asMultiPolyline()
@@ -521,18 +518,18 @@ opengis84 (at) gmail (dot) com
                         fet.setGeometry(QgsGeometry.fromPolyline(l))
                     else:
                         continue #jak linia jest pusta to przejdz do nastepnej
-                fet.setAttributeMap(feat.attributeMap())
+                fet.setAttributes(feat.attributes())
                 mProvider.addFeatures([fet])
-            mLayer.updateFieldMap()
+            mLayer.updateFields()
             mLayer.updateExtents()
             return mLayer
 
         else: #write shapefile on disk
-            writer = QgsVectorFileWriter(oPath, iProvider.encoding(), fields, QGis.WKBLineString, iLayer.srs())
+            writer = QgsVectorFileWriter(oPath, iProvider.encoding(), fields, QGis.WKBLineString, iLayer.crs())
             if writer.hasError() != QgsVectorFileWriter.NoError:
                 QMessageBox.critical(None, 'Generalizer', 'Error when creating shapefile: %s' % (writer.hasError()))
 
-            while iProvider.nextFeature(feat):
+            for feat in iProvider.getFeatures():
                 geom = feat.geometry()
                 if geom.isMultipart():
                     lm = geom.asMultiPolyline()
@@ -560,7 +557,7 @@ opengis84 (at) gmail (dot) com
                     if len(l) > 1:
                         #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(l) )
                         fet.setGeometry(QgsGeometry.fromPolyline(l))
-                fet.setAttributeMap(feat.attributeMap())
+                fet.setAttributes(feat.attributes())
                 writer.addFeature(fet)
 
             del writer
