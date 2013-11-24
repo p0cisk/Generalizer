@@ -1,0 +1,32 @@
+# This file contains metadata for your plugin. Beginning
+# with version 1.8 this is the preferred way to supply information about a
+# plugin. The current method of embedding metadata in __init__.py will
+# be supported until version 2.0
+
+# This file should be included when you package your plugin.
+
+# Mandatory items:
+
+
+[general]
+name=Generalizer
+qgisMinimumVersion=2.0
+description=Lines generalization and smoothing (partially based on v.generalize GRASS module)
+version=0.5
+author=Piotr Pociask
+email=
+
+# end of mandatory metadata
+
+# Optional items:
+
+homepage=https://github.com/p0cisk/Generalizer
+tracker=https://github.com/p0cisk/Generalizer/issues
+repository=https://github.com/p0cisk/Generalizer
+icon=icon.png
+
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version
+deprecated=False

@@ -38,7 +38,7 @@ class generalizer:
         self.action = QAction(QIcon(":/plugins/generalizer/icon.png"), \
             "Generalizer", self.iface.mainWindow())
         # connect the action to the run method
-        QObject.connect(self.action, SIGNAL("triggered()"), self.run)
+        self.action.triggered.connect( self.run )
 
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)

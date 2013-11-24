@@ -19,18 +19,6 @@
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
-def name():
-    return "Generalizer"
-def description():
-    return "Lines generalization and smoothing (partially based on v.generalize GRASS module)"
-def version():
-    return "Version 0.4"
-def icon():
-    return "icon.png"
-def qgisMinimumVersion():
-    return "1.0"
-def qgisMaximumVersion():
-    return "1.99"
 def classFactory(iface):
     # load generalizer class from file generalizer
     from generalizer import generalizer

@@ -7,7 +7,7 @@ def saveDialog(parent):
     """Shows a save file dialog and return the selected file path."""
     settings = QSettings()
     key = '/UI/lastShapefileDir'
-    outDir = settings.value(key).toString()
+    outDir = settings.value(key)
 
     filter = 'Shapefiles (*.shp)'
     outFilePath = QFileDialog.getSaveFileName(parent, parent.tr('Save output shapefile'), outDir, filter)
@@ -25,7 +25,7 @@ def saveDialog(parent):
 def openDir(parent):
     settings = QSettings()
     key = '/UI/lastShapefileDir'
-    outDir = settings.value(key).toString()
+    outDir = settings.value(key)
 
     outPath = QFileDialog.getExistingDirectory(parent, 'Generalizer', outDir)#, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
     return outPath
