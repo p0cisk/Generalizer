@@ -108,7 +108,7 @@ class generalizerDialog(QDialog):
 
         items = [self.ui.cbAlgorithm.itemText(i) for i in range(self.ui.cbAlgorithm.count())]
         algName = QInputDialog.getItem(None, 'Generalizer', 'Choose algorithm:', items, 1, False)
-        if not algName[1] or algName[0].left(1) == '-': return
+        if not algName[1] or algName[0].startswith('='): return
         #QMessageBox.question(self, 'Generalizer', str(alg))
         par1 = None
         par2 = None
