@@ -318,7 +318,7 @@ class generalizerDialog(QDialog):
     def showHelp(self):
         #show information about plugin
         QMessageBox.information(self, 'Generalizer', """Generalizer
-Version 0.4
+Version 0.5
 
 Created by
 Piotr Pociask
