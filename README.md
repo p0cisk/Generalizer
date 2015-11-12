@@ -1,0 +1,4 @@
+Generalizer
+===========
+
+Quantum GIS plugin
