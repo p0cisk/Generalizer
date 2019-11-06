@@ -1,3 +1,4 @@
+from builtins import object
 class MATRIX(object):
     def __init__(self, rows, cols):
         self.rows = rows
