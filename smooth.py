@@ -1,6 +1,9 @@
-from PyQt4.QtGui import *
-from points import *
-from matrix import *
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import range
+from qgis.PyQt.QtWidgets import *
+from .points import *
+from .matrix import *
 
 GRASS_EPSILON = 1.0e-15
 
@@ -386,14 +389,19 @@ def snakes(points, alpha, beta):
         g.a[i][i]= g.a[i][i] + 1.
         i = i+1
 
-    print 2
+    # fix_print_with_import
+    print(2)
     ginv = matrix_inverse(g)
-    print 3
+    # fix_print_with_import
+    # fix_print_with_import
+    print(3)
 
     xout = matrix_mult(ginv, xcoord)
     yout = matrix_mult(ginv, ycoord)
 
-    print 4
+    # fix_print_with_import
+    # fix_print_with_import
+    print(4)
 
     i = 1
     while i < n-1:
