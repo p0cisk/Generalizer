@@ -18,16 +18,22 @@
  *                                                                         *
  ***************************************************************************/
 """
+from __future__ import absolute_import
 # Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from builtins import object
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
+from PyQt5.QtWidgets import QAction
+
+
 from qgis.core import *
 # Initialize Qt resources from file resources.py
-import resources
+from . import resources
 # Import the code for the dialog
-from generalizerdialog import generalizerDialog, getLayersNames
+from .generalizerdialog import generalizerDialog, getLayersNames
 
-class generalizer:
+class generalizer(object):
 
     def __init__(self, iface):
         # Save reference to the QGIS interface
