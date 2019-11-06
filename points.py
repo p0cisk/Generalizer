@@ -1,4 +1,5 @@
-from PyQt4.QtGui import *
+from builtins import object
+from PyQt5.QtGui import *
 from math import sqrt, acos, pi, fabs
 
 class line_pnts(object):
