@@ -1,5 +1,6 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from builtins import str
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 from os.path import splitext, dirname
 
@@ -10,8 +11,8 @@ def saveDialog(parent):
     outDir = settings.value(key)
 
     filter = 'Shapefiles (*.shp)'
-    outFilePath = QFileDialog.getSaveFileName(parent, parent.tr('Save output shapefile'), outDir, filter)
-    outFilePath = unicode(outFilePath)
+    outFilePath, __ = QFileDialog.getSaveFileName(parent, parent.tr('Save output shapefile'), outDir, filter)
+    outFilePath = str(outFilePath)
 
     if outFilePath:
         root, ext = splitext(outFilePath)
