@@ -10,9 +10,9 @@
 
 [general]
 name=Generalizer
-qgisMinimumVersion=2.0
+qgisMinimumVersion=3.0
 description=Lines generalization and smoothing (partially based on v.generalize GRASS module)
-version=0.5
+version=0.6
 author=Piotr Pociask
 email=
 
