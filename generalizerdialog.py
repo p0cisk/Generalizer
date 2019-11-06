@@ -18,17 +18,23 @@
  *                                                                         *
  ***************************************************************************/
 """
+from __future__ import absolute_import
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from builtins import str
+from builtins import range
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
+from PyQt5.QtWidgets import QAction, QDialog, QMessageBox
+from qgis.utils import Qgis
 
 from qgis.core import *
 from qgis.gui import *
 
-import smooth, simplify, points
-from dialogs import *
+from . import smooth, simplify, points
+from .dialogs import *
 
-from ui_generalizer import Ui_generalizer
+from .ui_generalizer import Ui_generalizer
 
 #global variable with short to full algorithm names
 algorithm  = {'remove':'Remove small objects',
@@ -484,7 +490,7 @@ opengis84 (at) gmail (dot) com
         fields = iProvider.fields()
 
         if oPath == 'memory': #create memory layer
-            if iLayer.wkbType() == QGis.WKBLineString:
+            if iLayer.wkbType() == QgsWkbTypes.LineString:
                 mLayer = QgsVectorLayer('LineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
             else:
                 mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
@@ -594,7 +600,7 @@ opengis84 (at) gmail (dot) com
                     vLayer = self.doGeneralize(layer, vLayer, 'memory', func, arguments)
 
             if not self.ui.cbOutDir.isChecked():
-                QgsMapLayerRegistry.instance().addMapLayer(vLayer)
+                QgsProject.instance().addMapLayer(vLayer)
 
         if self.ui.cbOutDir.isChecked():
             self.LoadLayers(outNames)
@@ -631,7 +637,7 @@ opengis84 (at) gmail (dot) com
                 self.LoadLayers([filePath])
             else:
                 mLayer = self.doGeneralize(self.ui.cbInput.currentText(), getMapLayerByName(self.ui.cbInput.currentText()), 'memory', func, arguments)
-                QgsMapLayerRegistry.instance().addMapLayer(mLayer)
+                QgsProject.instance().addMapLayer(mLayer)
 
         #self.close()
         #refresh layer list
@@ -746,18 +752,18 @@ opengis84 (at) gmail (dot) com
 
 
 def getLayersNames():
-    layermap = QgsMapLayerRegistry.instance().mapLayers()
+    layermap = QgsProject.instance().mapLayers()
     layerlist = []
-    for name, layer in layermap.iteritems():
+    for name, layer in layermap.items():
         if layer.type() == QgsMapLayer.VectorLayer:
-            if layer.geometryType() == QGis.Line:
-                layerlist.append( unicode( layer.name() ) )
+            if layer.geometryType() == QgsWkbTypes.LineGeometry:
+                layerlist.append( str( layer.name() ) )
 
     return layerlist
 
 def getMapLayerByName(myName):
-    layermap = QgsMapLayerRegistry.instance().mapLayers()
-    for name, layer in layermap.iteritems():
+    layermap = QgsProject.instance().mapLayers()
+    for name, layer in layermap.items():
         if layer.name() == myName:
             if layer.isValid():
                 return layer
