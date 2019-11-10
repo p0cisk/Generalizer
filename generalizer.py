@@ -26,7 +26,7 @@ from builtins import object
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from PyQt5.QtWidgets import QAction
+from PyQt5.QtWidgets import QAction, QMessageBox
 
 
 from qgis.core import *
