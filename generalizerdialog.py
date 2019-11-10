@@ -7,6 +7,8 @@
         begin                : 2011-08-17
         copyright            : (C) 2011 by Piotr Pociask
         email                : ppociask (at) o2 pl
+        adapted to QGIS 3    : 2019-11-10 by Sylvain POULAIN
+        email				 : sylvain.poulain (at) giscan.com        
  ***************************************************************************/
 
 /***************************************************************************
@@ -51,6 +53,7 @@ algorithm  = {'remove':'Remove small objects',
               'RW':'Reumann-Witkam Algorithm'
               }
 
+crs = QgsProject.instance().crs()
 
 class generalizerDialog(QDialog):
     def __init__(self, iface):
@@ -490,10 +493,14 @@ opengis84 (at) gmail (dot) com
         fields = iProvider.fields()
 
         if oPath == 'memory': #create memory layer
+            #if iLayer.wkbType() == QgsWkbTypes.LineString:
+            #    mLayer = QgsVectorLayer('LineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+            #else:
+            #    mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')			
             if iLayer.wkbType() == QgsWkbTypes.LineString:
-                mLayer = QgsVectorLayer('LineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+                mLayer = QgsVectorLayer('LineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
             else:
-                mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+                mLayer = QgsVectorLayer('MultiLineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
 
             mProvider = mLayer.dataProvider()
             mProvider.addAttributes( [key for key in fields] )
