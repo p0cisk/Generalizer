@@ -80,7 +80,7 @@ def sliding_averaging(points, slide, look_ahead):
         point_assign(points, i, s)
         point_scalar(s, 1. - slide, s)
         point_scalar(p, sc*slide, tmp)
-        points_add(tmp, s, res[i])
+        points_add(tmp, s, res[int(i)])
         if i+half+1 < n:
             point_assign(points, i-half, tmp)
             point_substract(p, tmp, p)
@@ -90,7 +90,7 @@ def sliding_averaging(points, slide, look_ahead):
 
     i = half
     while i+half < n:
-        points.repleace_point(i, res[i])
+        points.repleace_point(i, res[int(i)])
 
         i = i + 1
 
@@ -156,12 +156,12 @@ def distance_weighting(points, slide, look_ahead):
         else:
             point_scalar(s, slide/dists, tmp)
         point_scalar(c, 1.-slide, s)
-        points_add(s, tmp, res[i])
+        points_add(s, tmp, res[int(i)])
         i = i + 1
 
     i = half
     while i+half < n:
-        points.repleace_point(i, res[i])
+        points.repleace_point(i, res[int(i)])
 
         i = i + 1
 
