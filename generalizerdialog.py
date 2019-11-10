@@ -327,16 +327,15 @@ class generalizerDialog(QDialog):
     def showHelp(self):
         #show information about plugin
         QMessageBox.information(self, 'Generalizer', """Generalizer
-Version 0.5
+Version 0.6
 
-Created by
+Originally created by
 Piotr Pociask
+Adapted to QGIS3 by
+Sylvain POULAIN
 
-This plugin is marked as experimental.
-If you find any bugs or have suggestions,
-please contact with me:
-opengis84 (at) gmail (dot) com
-
+Documentation available :
+https://github.com/giscan/Generalizer/wiki
 """)
 
     def outFile(self):
