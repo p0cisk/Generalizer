@@ -7,6 +7,8 @@
         begin                : 2011-08-17
         copyright            : (C) 2011 by Piotr Pociask
         email                : ppociask (at) o2 pl
+        adapted to QGIS 3    : 2019-11-10 by Sylvain POULAIN
+        email				 : sylvain.poulain (at) giscan.com
  ***************************************************************************/
 
 /***************************************************************************
