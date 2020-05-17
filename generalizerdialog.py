@@ -478,8 +478,8 @@ https://github.com/giscan/Generalizer/wiki
                 else:
                     out_name = filePath[(len(filePath) - filePath.rfind("/")) - 1:]
 
-                if out_name.endswith(".shp"):
-                    out_name = out_name[:len(out_name) - 4]
+                if out_name.endswith(".gpkg"):
+                    out_name = out_name[:len(out_name) - 5]
 
                     self.iface.addVectorLayer(filePath, out_name, "ogr")
 
@@ -497,9 +497,11 @@ https://github.com/giscan/Generalizer/wiki
             #else:
             #    mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')			
             if iLayer.wkbType() == QgsWkbTypes.LineString:
-                mLayer = QgsVectorLayer('LineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+                #mLayer = QgsVectorLayer('LineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+                mLayer = QgsVectorLayer('LineString?crs=' + crs.authid(), iLayerName + '_memory', 'memory')
             else:
-                mLayer = QgsVectorLayer('MultiLineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+                #mLayer = QgsVectorLayer('MultiLineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
+                mLayer = QgsVectorLayer('MultiLineString?crs=' + crs.authid(), iLayerName + '_memory', 'memory')
 
             mProvider = mLayer.dataProvider()
             mProvider.addAttributes( [key for key in fields] )
@@ -517,7 +519,7 @@ https://github.com/giscan/Generalizer/wiki
                         if len(l2) > 1:
                             l.append(l2)
                     if len(l) > 1:
-                        fet.setGeometry(QgsGeometry.fromMultiPolyline(l))
+                        fet.setGeometry(QgsGeometry.fromMultiPolylineXY(l))
                     elif len(l) == 1: #jesli z obiektu wieloczesciowego zostaje tylko jedna linia (np. przy usuwaniu malych obiektow)
                         fet.setGeometry(QgsGeometry.fromPolyline(l[0]))
                 else:
@@ -537,7 +539,8 @@ https://github.com/giscan/Generalizer/wiki
             return mLayer
 
         else: #write shapefile on disk
-            writer = QgsVectorFileWriter(oPath, iProvider.encoding(), fields, QGis.WKBLineString, iLayer.crs())
+            #writer = QgsVectorFileWriter(oPath, iProvider.encoding(), fields, QGis.WKBLineString, iLayer.crs())
+            writer = QgsVectorFileWriter(oPath, iProvider.encoding(), fields, QgsWkbTypes.LineString, iLayer.crs())
             if writer.hasError() != QgsVectorFileWriter.NoError:
                 QMessageBox.critical(None, 'Generalizer', 'Error when creating shapefile: %s' % (writer.hasError()))
 
@@ -557,7 +560,7 @@ https://github.com/giscan/Generalizer/wiki
                             l.append(l2)
                     if len(l) > 1:
                         #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(l) )
-                        fet.setGeometry(QgsGeometry.fromMultiPolyline(l))
+                        fet.setGeometry(QgsGeometry.fromMultiPolylineXY(l))
                 else:
                     ls = geom.asPolyline()
                     #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(ls) )
@@ -597,9 +600,9 @@ https://github.com/giscan/Generalizer/wiki
                     #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(i) )
                     path = self.ui.eDir.text()
                     if path.contains("\\"):
-                        out_name = path + '\\' + layer + '_new.shp'
+                        out_name = path + '\\' + layer + '_new.gpkg'
                     else:
-                        out_name = path + '/' + layer + '_new.shp'
+                        out_name = path + '/' + layer + '_new.gpkg'
                     outNames.append(out_name)
                     vLayer = self.doGeneralize(layer, vLayer, out_name, func, arguments)
                 else:

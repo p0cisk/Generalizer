@@ -1,10 +1,28 @@
 [general]
-name=Generalizer
+name=Generalizer3
+email=sylvain.poulain@giscan.com
 qgisMinimumVersion=3.0
 description=Lines generalization and smoothing (partially based on v.generalize GRASS module)
-version=0.6
+about=Plugin to Generalize, Simplify or Smooth lines in QGIS
+      Functions :
+             Remove small objects
+             Simplify :
+                 Douglas-Peucker Algorithm
+                 Jenk's Algorithm
+                 Lang Algorithm
+                 Reumann-Witkam Algorithm
+                 Vertex Reduction
+            Smooth :
+                 Boyle's Forward-Looking Algorithm
+                 Chaiken's Algorithm
+                 Hermite Spline Interpolation
+                 McMaster's Distance-Weighting Algorithm
+                 Distance Weighting
+                 McMaster's Sliding Averaging Algorithm
+                 Snakes Algorithm : Slowest smoothing algorithm
+version=0.7
 author=Piotr Pociask, Matthew Petroff, Sylvain POULAIN
-email=sylvain.poulain (at) giscan.com
+
 
 # end of mandatory metadata
 
@@ -14,6 +32,7 @@ homepage=https://github.com/giscan/Generalizer
 tracker=https://github.com/giscan/Generalizer/issues
 repository=https://github.com/giscan/Generalizer
 icon=icon.png
+tags=line,vector,smooth,simplify
 
 # experimental flag
 experimental=True
@@ -22,6 +41,9 @@ experimental=True
 deprecated=False
 
 changelog=
+	0.7 (17.05.2020)
+		- fix save layer to file
+		- remove unattended column in temporary layer
     0.6 (10.11.2019)
         - updated to QGIS 3.x
         - fix projection according to project coordinates

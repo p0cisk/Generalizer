@@ -1,3 +1,7 @@
+0.7 (17.05.2020)
+- fix save layer to file
+- remove unattended column in temporary layer
+
 0.6 (10.11.2019)
 - updated to QGIS 3.x
 - fix projection according to project coordinates
