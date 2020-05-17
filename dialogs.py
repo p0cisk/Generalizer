@@ -1,6 +1,7 @@
 from builtins import str
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from  PyQt5.QtWidgets import *
 
 from os.path import splitext, dirname
 
@@ -10,14 +11,14 @@ def saveDialog(parent):
     key = '/UI/lastShapefileDir'
     outDir = settings.value(key)
 
-    filter = 'Shapefiles (*.shp)'
-    outFilePath, __ = QFileDialog.getSaveFileName(parent, parent.tr('Save output shapefile'), outDir, filter)
+    filter = 'GeoPackage (*.gpkg)'
+    outFilePath, __ = QFileDialog.getSaveFileName(parent, parent.tr('Save output GeoPackage'), outDir, filter)
     outFilePath = str(outFilePath)
 
     if outFilePath:
         root, ext = splitext(outFilePath)
-        if ext.upper() != '.SHP':
-            outFilePath = '%s.shp' % outFilePath
+        if ext.upper() != '.GPKG':
+            outFilePath = '%s.gpkg' % outFilePath
         outDir = dirname(outFilePath)
         settings.setValue(key, outDir)
 
