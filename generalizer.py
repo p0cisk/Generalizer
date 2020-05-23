@@ -31,7 +31,7 @@ from PyQt5.QtWidgets import QAction, QMessageBox
 
 from qgis.core import *
 # Initialize Qt resources from file resources.py
-from . import resources
+from .resources import *
 # Import the code for the dialog
 from .generalizerdialog import generalizerDialog, getLayersNames
 
