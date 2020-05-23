@@ -1,3 +1,6 @@
+0.8 (23.05.2020)
+- fix import resources
+        
 0.7 (17.05.2020)
 - fix save layer to file
 - remove unattended column in temporary layer
