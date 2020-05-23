@@ -20,7 +20,7 @@ about=Plugin to Generalize, Simplify or Smooth lines in QGIS
                  Distance Weighting
                  McMaster's Sliding Averaging Algorithm
                  Snakes Algorithm : Slowest smoothing algorithm
-version=0.7
+version=0.8
 author=Piotr Pociask, Matthew Petroff, Sylvain POULAIN
 
 
@@ -41,9 +41,11 @@ experimental=True
 deprecated=False
 
 changelog=
-	0.7 (17.05.2020)
-		- fix save layer to file
-		- remove unattended column in temporary layer
+    0.8 (23.05.2020)
+        - fix import resources
+    0.7 (17.05.2020)
+        - fix save layer to file
+        - remove unattended column in temporary layer
     0.6 (10.11.2019)
         - updated to QGIS 3.x
         - fix projection according to project coordinates
