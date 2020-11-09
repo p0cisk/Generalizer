@@ -20,7 +20,7 @@ about=Plugin to Generalize, Simplify or Smooth lines in QGIS
                  Distance Weighting
                  McMaster's Sliding Averaging Algorithm
                  Snakes Algorithm : Slowest smoothing algorithm
-version=0.8
+version=0.9
 author=Piotr Pociask, Matthew Petroff, Sylvain POULAIN
 
 
