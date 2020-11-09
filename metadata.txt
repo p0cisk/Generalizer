@@ -35,12 +35,14 @@ icon=icon.png
 tags=line,vector,smooth,simplify
 
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
 
 changelog=
+    0.9 (09.11.2020)
+        - Move plugin to his self toolbar
     0.8 (23.05.2020)
         - fix import resources
     0.7 (17.05.2020)
