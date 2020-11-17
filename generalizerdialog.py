@@ -515,13 +515,13 @@ https://github.com/giscan/Generalizer/wiki
                         p = func(ls, **arguments)
                         l2 = []
                         for n in range(p.n_points):
-                            l2.append(QgsPoint(p.x[n], p.y[n]))
+                            l2.append(QgsPointXY(p.x[n], p.y[n]))
                         if len(l2) > 1:
                             l.append(l2)
                     if len(l) > 1:
                         fet.setGeometry(QgsGeometry.fromMultiPolylineXY(l))
                     elif len(l) == 1: #jesli z obiektu wieloczesciowego zostaje tylko jedna linia (np. przy usuwaniu malych obiektow)
-                        fet.setGeometry(QgsGeometry.fromPolyline(l[0]))
+                        fet.setGeometry(QgsGeometry.fromPolylineXY(l[0]))
                 else:
                     ls = geom.asPolyline()
                     p = func(ls, **arguments)
