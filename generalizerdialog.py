@@ -498,10 +498,10 @@ https://github.com/giscan/Generalizer/wiki
             #    mLayer = QgsVectorLayer('MultiLineString', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')			
             if iLayer.wkbType() == QgsWkbTypes.LineString:
                 #mLayer = QgsVectorLayer('LineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
-                mLayer = QgsVectorLayer("LineString?crs=" + crs.authid(), iLayerName + "_memory", "memory")
+                mLayer = QgsVectorLayer("LineString?crs=" + QgsProject.instance().crs().authid(), iLayerName + "_memory", "memory")
             else:
                 #mLayer = QgsVectorLayer('MultiLineString?crs=' + crs.authid() + '&field=MYNYM:integer&field=MYTXT:string', iLayerName + '_memory', 'memory')#self.NameFromFunc(func, arguments), 'memory')
-                mLayer = QgsVectorLayer("MultiLineString?crs=" + crs.authid(), iLayerName + "_memory", "memory")
+                mLayer = QgsVectorLayer("MultiLineString?crs=" + QgsProject.instance().crs().authid(), iLayerName + "_memory", "memory")
 
             mProvider = mLayer.dataProvider()
             mProvider.addAttributes( [key for key in fields] )
