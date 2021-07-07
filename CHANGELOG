@@ -1,3 +1,18 @@
+0.9 (09.11.2020)
+- Move plugin to his self toolbar
+
+0.8 (23.05.2020)
+- fix import resources
+        
+0.7 (17.05.2020)
+- fix save layer to file
+- remove unattended column in temporary layer
+
+0.6 (10.11.2019)
+- updated to QGIS 3.x
+- fix projection according to project coordinates
+- quick documentation
+
 0.5 (24.11.2013)
 -updated to QGIS 2.0 API (thanks to Matthew Petroff)
 -fix unicode error

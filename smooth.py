@@ -1,6 +1,9 @@
-from PyQt4.QtGui import *
-from points import *
-from matrix import *
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import range
+from qgis.PyQt.QtWidgets import *
+from .points import *
+from .matrix import *
 
 GRASS_EPSILON = 1.0e-15
 
@@ -77,7 +80,7 @@ def sliding_averaging(points, slide, look_ahead):
         point_assign(points, i, s)
         point_scalar(s, 1. - slide, s)
         point_scalar(p, sc*slide, tmp)
-        points_add(tmp, s, res[i])
+        points_add(tmp, s, res[int(i)])
         if i+half+1 < n:
             point_assign(points, i-half, tmp)
             point_substract(p, tmp, p)
@@ -87,7 +90,7 @@ def sliding_averaging(points, slide, look_ahead):
 
     i = half
     while i+half < n:
-        points.repleace_point(i, res[i])
+        points.repleace_point(i, res[int(i)])
 
         i = i + 1
 
@@ -153,12 +156,12 @@ def distance_weighting(points, slide, look_ahead):
         else:
             point_scalar(s, slide/dists, tmp)
         point_scalar(c, 1.-slide, s)
-        points_add(s, tmp, res[i])
+        points_add(s, tmp, res[int(i)])
         i = i + 1
 
     i = half
     while i+half < n:
-        points.repleace_point(i, res[i])
+        points.repleace_point(i, res[int(i)])
 
         i = i + 1
 
@@ -386,14 +389,19 @@ def snakes(points, alpha, beta):
         g.a[i][i]= g.a[i][i] + 1.
         i = i+1
 
-    print 2
+    # fix_print_with_import
+    print(2)
     ginv = matrix_inverse(g)
-    print 3
+    # fix_print_with_import
+    # fix_print_with_import
+    print(3)
 
     xout = matrix_mult(ginv, xcoord)
     yout = matrix_mult(ginv, ycoord)
 
-    print 4
+    # fix_print_with_import
+    # fix_print_with_import
+    print(4)
 
     i = 1
     while i < n-1:

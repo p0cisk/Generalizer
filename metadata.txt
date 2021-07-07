@@ -1,32 +1,74 @@
-# This file contains metadata for your plugin. Beginning
-# with version 1.8 this is the preferred way to supply information about a
-# plugin. The current method of embedding metadata in __init__.py will
-# be supported until version 2.0
-
-# This file should be included when you package your plugin.
-
-# Mandatory items:
-
-
 [general]
-name=Generalizer
-qgisMinimumVersion=2.0
+name=Generalizer3
+email=sylvain.poulain@giscan.com
+qgisMinimumVersion=3.0
 description=Lines generalization and smoothing (partially based on v.generalize GRASS module)
-version=0.5
-author=Piotr Pociask
-email=
+about=Plugin to Generalize, Simplify or Smooth lines in QGIS
+      Functions :
+             Remove small objects
+             Simplify :
+                 Douglas-Peucker Algorithm
+                 Jenk's Algorithm
+                 Lang Algorithm
+                 Reumann-Witkam Algorithm
+                 Vertex Reduction
+            Smooth :
+                 Boyle's Forward-Looking Algorithm
+                 Chaiken's Algorithm
+                 Hermite Spline Interpolation
+                 McMaster's Distance-Weighting Algorithm
+                 Distance Weighting
+                 McMaster's Sliding Averaging Algorithm
+                 Snakes Algorithm : Slowest smoothing algorithm
+version=0.9
+author=Piotr Pociask, Matthew Petroff, Sylvain POULAIN
+
 
 # end of mandatory metadata
 
 # Optional items:
 
-homepage=https://github.com/p0cisk/Generalizer
-tracker=https://github.com/p0cisk/Generalizer/issues
-repository=https://github.com/p0cisk/Generalizer
+homepage=https://github.com/giscan/Generalizer
+tracker=https://github.com/giscan/Generalizer/issues
+repository=https://github.com/giscan/Generalizer
 icon=icon.png
+tags=line,vector,smooth,simplify
 
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
+
+changelog=
+    0.9 (09.11.2020)
+        - Move plugin to his self toolbar
+    0.8 (23.05.2020)
+        - fix import resources
+    0.7 (17.05.2020)
+        - fix save layer to file
+        - remove unattended column in temporary layer
+    0.6 (10.11.2019)
+        - updated to QGIS 3.x
+        - fix projection according to project coordinates
+        - quick documentation
+    0.5 (24.11.2013)
+        -updated to QGIS 2.0 API (thanks to Matthew Petroff)
+        -fix unicode error
+    0.4 (27.10.2013)
+        -add setDecimal() method in batch mode. Added by Bakhtiar Hasmanan
+    0.3 (15.09.2011)
+       -new algorithms:
+       smoothing: Snakes Algorithm
+       simplifying: Jenk's Algorithm, Reumann-Witkam Algorithm
+    0.2 (11.09.2011)
+       -added batch mode
+       -choose to save layer(s) on disk or to store in memory
+       -new algorithms:
+       smoothing: Hermite Spline Interpolation
+    0.1 (28.08.2011)
+       -first release
+       -supported algorithms:
+       generalization: Remove small objects
+       simplifying: Douglas-Peucker, Lang, Vertex Reduction
+       smoothing: Boyle's Forward-Looking, Chaiken's, McMaster's Distance-Weighting, McMaster's Sliding Averaging
