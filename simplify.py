@@ -1,5 +1,7 @@
-from PyQt4.QtGui import *
-from points import *
+from __future__ import absolute_import
+from builtins import range
+from PyQt5.QtGui import *
+from .points import *
 import math
 
 

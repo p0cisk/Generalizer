@@ -153,7 +153,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Chaiken's Algorithm</string>
+              <string>Chaikin's Algorithm</string>
              </property>
             </item>
             <item>
@@ -410,7 +410,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="sbChaiken_level">
+               <widget class="QSpinBox" name="sbChaikin_level">
                 <property name="minimum">
                  <number>1</number>
                 </property>
@@ -427,7 +427,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="sbChaiken_weight">
+               <widget class="QDoubleSpinBox" name="sbChaikin_weight">
                 <property name="minimum">
                  <double>1.000000000000000</double>
                 </property>
@@ -748,8 +748,8 @@
   <tabstop>sbLang_LA</tabstop>
   <tabstop>sbReduction_thresh</tabstop>
   <tabstop>sbBoyle_LA</tabstop>
-  <tabstop>sbChaiken_level</tabstop>
-  <tabstop>sbChaiken_weight</tabstop>
+  <tabstop>sbChaikin_level</tabstop>
+  <tabstop>sbChaikin_weight</tabstop>
   <tabstop>sbHermite_steps</tabstop>
   <tabstop>sbHermite_tightness</tabstop>
   <tabstop>sbDist_slide</tabstop>

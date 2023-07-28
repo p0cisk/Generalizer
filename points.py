@@ -1,4 +1,5 @@
-from PyQt4.QtGui import *
+from builtins import object
+from PyQt5.QtGui import *
 from math import sqrt, acos, pi, fabs
 
 class line_pnts(object):
@@ -28,8 +29,8 @@ class line_pnts(object):
         self.n_points = len(self.x)
 
     def repleace_point(self, index, p):
-        self.x[index] = p.x
-        self.y[index] = p.y
+        self.x[int(index)] = p.x
+        self.y[int(index)] = p.y
 
     def repleace_all_pts(self, pts):
         self.x = pts.x[:]
@@ -73,8 +74,8 @@ def point_substract(a, b, res):
     res.y = a.y - b.y
 
 def point_assign(points, index, res):
-    res.x = points.x[index]
-    res.y = points.y[index]
+    res.x = points.x[int(index)]
+    res.y = points.y[int(index)]
 
 
 def point_dist(a, b):

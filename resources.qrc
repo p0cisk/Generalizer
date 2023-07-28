@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/plugins/generalizer" >
+    <qresource prefix="/plugins/Generalizer3" >
         <file>icon.png</file>
     </qresource>
 </RCC>
