@@ -168,7 +168,7 @@ def distance_weighting(points, slide, look_ahead):
     return points.n_points
 
 
-def chaiken(points, level, weight):
+def chaikin(points, level, weight):
     n = 0
     i = 0
     j = 0

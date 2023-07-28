@@ -44,7 +44,7 @@ algorithm  = {'remove':'Remove small objects',
               'lang':'Lang Algorithm',
               'reduction':'Vertex Reduction',
               'boyle':'Boyle\'s Forward-Looking Algorithm',
-              'chaiken':'Chaiken\'s Algorithm',
+              'chaikin':'Chaikin\'s Algorithm',
               'hermite':'Hermite Spline Interpolation',
               'distance':'McMaster\'s Distance-Weighting Algorithm',
               'sliding':'McMaster\'s Sliding Averaging Algorithm',
@@ -169,7 +169,7 @@ class generalizerDialog(QDialog):
                 par2.setValue(msg[0])
                 par2.setToolTip('Look ahead')
 
-        elif algName[0] == algorithm['chaiken']: #'Chaiken\'s Algorithm':
+        elif algName[0] == algorithm['chaikin']: #'Chaikin\'s Algorithm':
             par1 = QSpinBox()
             par1.setRange(0, 99)
             msg = QInputDialog.getInt(None, 'Generalizer', 'Level:', 1, 0, 99)
@@ -375,8 +375,8 @@ https://github.com/giscan/Generalizer/wiki
             arguments['slide_LA'] = self.ui.sbSlide_LA.value()
             arguments['dist_slide'] = self.ui.sbDist_slide.value()
             arguments['dist_LA'] = self.ui.sbDist_LA.value()
-            arguments['chaiken_level'] = self.ui.sbChaiken_level.value()
-            arguments['chaiken_weight'] = self.ui.sbChaiken_weight.value()
+            arguments['chaikin_level'] = self.ui.sbChaikin_level.value()
+            arguments['chaikin_weight'] = self.ui.sbChaikin_weight.value()
             arguments['hermite_thresh'] = self.ui.sbHermite_steps.value()
             arguments['hermite_tightness'] = self.ui.sbHermite_tightness.value()
             arguments['jenks_thresh'] = self.ui.sbJenks_thresh.value()
@@ -396,8 +396,8 @@ https://github.com/giscan/Generalizer/wiki
             arguments['slide_LA'] = par2
             arguments['dist_slide'] = par1
             arguments['dist_LA'] = par2
-            arguments['chaiken_level'] = par1
-            arguments['chaiken_weight'] = par2
+            arguments['chaikin_level'] = par1
+            arguments['chaikin_weight'] = par2
             arguments['hermite_thresh'] = par1
             arguments['hermite_tightness'] = par2
             arguments['jenks_thresh'] = par1
@@ -422,8 +422,8 @@ https://github.com/giscan/Generalizer/wiki
             return self.sliding_averaging
         elif funcName == algorithm['distance']:#'McMaster\'s Distance-Weighting Algorithm':
             return self.distance_weighting
-        elif funcName == algorithm['chaiken']:#'Chaiken\'s Algorithm':
-            return self.chaiken
+        elif funcName == algorithm['chaikin']:#'Chaikin\'s Algorithm':
+            return self.chaikin
         elif funcName == algorithm['reduction']:#'Vertex Reduction':
             return self.vertex_reduction
         elif funcName == algorithm['DP']:#'Douglas-Peucker Algorithm':
@@ -448,8 +448,8 @@ https://github.com/giscan/Generalizer/wiki
             return '-slide_slide-' + str(arguments['slide_slide']) + '_LA-' + str(arguments['slide_LA'])
         elif func == self.distance_weighting:
             return '-dist_slide-' + str(arguments['dist_slide']) + '_LA-' + str(arguments['dist_LA'])
-        elif func == self.chaiken:
-            return '-chaiken_level-' + str(arguments['chaiken_level']) + '_weight-' + str(arguments['chaiken_weight'])
+        elif func == self.chaikin:
+            return '-chaikin_level-' + str(arguments['chaikin_level']) + '_weight-' + str(arguments['chaikin_weight'])
         elif func == self.vertex_reduction:
             return '-reduction_thresh-' + str(arguments['reduction_thresh'])
         elif func == self.douglas_peucker:
@@ -700,11 +700,11 @@ https://github.com/giscan/Generalizer/wiki
 
         return p
 
-    def chaiken(self,l,  **kwargs):
-        #Chaiken's Algorithm
+    def chaikin(self,l,  **kwargs):
+        #Chaikin's Algorithm
         p = points.Vect_new_line_struct(l)
         #QInputDialog.getText( self.iface.mainWindow(), "m", "e",   QLineEdit.Normal, str(p.n_points) )
-        n = smooth.chaiken(p, kwargs['chaiken_level'], kwargs['chaiken_weight'])
+        n = smooth.chaikin(p, kwargs['chaikin_level'], kwargs['chaikin_weight'])
 
         return p
 

@@ -21,17 +21,17 @@ Functions :
      
      ![Boyle's](https://grasswiki.osgeo.org/w/images/thumb/V.generalize.pic15.png/400px-V.generalize.pic15.png "Original line is black")
      
-     * Chaiken's Algorithm
+     * Chaikin's Algorithm
      
-     ![Chaiken's smooth](https://grass.osgeo.org/grass79/manuals/v_generalize_smooth.png "Original line is black")
+     ![Chaikin's smooth](https://grass.osgeo.org/grass79/manuals/v_generalize_smooth.png "Original line is black")
      
-     ![Chaiken's](https://grasswiki.osgeo.org/w/images/thumb/V.generalize.pic7.png/400px-V.generalize.pic7.png "Original is black")
+     ![Chaikin's](https://grasswiki.osgeo.org/w/images/thumb/V.generalize.pic7.png/400px-V.generalize.pic7.png "Original is black")
      
      * Hermite Spline Interpolation
      
      ![Hermite](https://grasswiki.osgeo.org/w/images/thumb/V.generalize.pic8.png/400px-V.generalize.pic8.png "Original is black")
      
-     ![Hermite and Chaiken](https://grasswiki.osgeo.org/w/images/thumb/V.generalize.pic9.png/400px-V.generalize.pic9.png "Original = black, Green = Chaiken, Blue = Hermite")
+     ![Hermite and Chaikin](https://grasswiki.osgeo.org/w/images/thumb/V.generalize.pic9.png/400px-V.generalize.pic9.png "Original = black, Green = Chaikin, Blue = Hermite")
      
      * McMaster's Distance-Weighting Algorithm
      

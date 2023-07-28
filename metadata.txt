@@ -14,7 +14,7 @@ about=Plugin to Generalize, Simplify or Smooth lines in QGIS
                  Vertex Reduction
             Smooth :
                  Boyle's Forward-Looking Algorithm
-                 Chaiken's Algorithm
+                 Chaikin's Algorithm
                  Hermite Spline Interpolation
                  McMaster's Distance-Weighting Algorithm
                  Distance Weighting
@@ -71,4 +71,4 @@ changelog=
        -supported algorithms:
        generalization: Remove small objects
        simplifying: Douglas-Peucker, Lang, Vertex Reduction
-       smoothing: Boyle's Forward-Looking, Chaiken's, McMaster's Distance-Weighting, McMaster's Sliding Averaging
+       smoothing: Boyle's Forward-Looking, Chaikin's, McMaster's Distance-Weighting, McMaster's Sliding Averaging
